@@ -1,0 +1,41 @@
+{
+  "name": "ms-bookings",
+  "version": "0.0.0",
+  "description": "Can book seat for an event",
+  "scripts": {
+    "test": "eslint . && nyc tape tests/test_*.js",
+    "start": "npx sls offline --stage local start",
+    "config-dev": "cp serverless.env.dev.yml serverless.env.yml",
+    "start-dev": "npm run config-dev && npx sls offline --stage dev start",
+    "start-pm2": "npm run ddb:create && npm start",
+    "start-docker": "npm install && npm run ddb:create && npm start",
+    "ddb:create": "gs-migrate --action create --stage local",
+    "ddb:purge": "gs-migrate --action drop --stage local"
+  },
+  "dependencies": {
+    "@growsari/remove-sls-offline": "0.0.0",
+    "@growsari/sls-remove-http-events": "0.0.2",
+    "array-chunk-by-size": "^2.1.1",
+    "js-base64": "^2.5.1",
+    "nanoid": "^3.1.28"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.540.0",
+    "@aws-sdk/client-lambda": "^3.540.0",
+    "@aws-sdk/client-sns": "^3.540.0",
+    "@aws-sdk/lib-dynamodb": "^3.540.0",
+    "@aws-sdk/util-dynamodb": "^3.540.0",
+    "@growsari/errors": "0.0.4",
+    "@growsari/event-bus-publish": "1.0.0",
+    "@growsari/invoke-lambda": "1.0.3",
+    "@growsari/models": "1.0.2",
+    "axios": "^0.21.1",
+    "form-data": "^4.0.0",
+    "eslint": "^6.7.2",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "nyc": "^14.1.1",
+    "serverless-offline": "^13.5.0",
+    "tape": "^4.11.0"
+  }
+}

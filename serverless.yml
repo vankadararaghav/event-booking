@@ -1,0 +1,38 @@
+service: ms-bookings
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  architecture: arm64
+  versionFunctions: false
+  region: ${file(./serverless.env.yml):${opt:stage}.REGION}
+  environment: ${file(./serverless.env.yml):${opt:stage}}
+  iamRoleStatements: ${file(./serverless.iam.yml):iamRoleStatements}
+  layers:
+    - ${cf:layer-common-${opt:stage}.LayerCommonGs}
+    - ${cf:layer-common-${opt:stage}.LayerCommonLibs}
+
+resources: ${file(./serverless.resources.yml)}
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    host: 0.0.0.0
+    lambdaPort:	3027
+    httpPort: 3127
+    localEnvironment: true
+
+functions:
+  event-create:
+    handler: src/controllers/event.create
+    timeout: 900
+
+  event-update:
+    handler: src/controllers/event.update
+    timeout: 900
+
+  booking_seat:
+    handler: src/controllers/seat.booking
+    timeout: 900

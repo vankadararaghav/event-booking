@@ -1,0 +1,63 @@
+Resources:
+  DynamoDBTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: ${file(./serverless.env.yml):${opt:stage}.TABLE_NAME}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        -
+          AttributeName: "primary"
+          AttributeType: "S"
+        -
+          AttributeName: "secondary"
+          AttributeType: "S"
+        -
+          AttributeName: "identifier"
+          AttributeType: "S"
+        -
+          AttributeName: "created_at"
+          AttributeType: "S"
+        -
+          AttributeName: "due_date"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "primary"
+          KeyType: "HASH"
+        -
+          AttributeName: "secondary"
+          KeyType: "RANGE"
+      GlobalSecondaryIndexes:
+        -
+          IndexName: "IdentifierIndex"
+          KeySchema:
+            -
+              AttributeName: "secondary"
+              KeyType: "HASH"
+            -
+              AttributeName: "identifier"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+        -
+          IndexName: "SortByCreatedAtIndex"
+          KeySchema:
+            -
+              AttributeName: "secondary"
+              KeyType: "HASH"
+            -
+              AttributeName: "created_at"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+        -
+          IndexName: "SortByDueDateIndex"
+          KeySchema:
+            -
+              AttributeName: "secondary"
+              KeyType: "HASH"
+            -
+              AttributeName: "due_date"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
